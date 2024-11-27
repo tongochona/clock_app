@@ -1,6 +1,6 @@
-
 import 'package:clock_app/model/Arlarm.dart';
 import 'package:clock_app/view/ClockWidget.dart';
+import 'package:clock_app/view/TimerWidget.dart';
 import 'package:clock_app/view/arlarmWidget.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +36,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   List<Arlarm> arlarm = [];
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Colors.white,
       ),
       body: Container(
-          child: _selectedIndex == 0 ? ArlarmWidget(arlarm : arlarm) : const ClockWidget()),
+          child: getBodyWidget()),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.grey[800],
@@ -70,6 +69,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Widget getBodyWidget() {
+    switch (_selectedIndex) {
+      case 0:
+        return ArlarmWidget(arlarm: arlarm);
+      case 1:
+        return const ClockWidget();
+      case 2:
+        return Container();
+      case 3:
+        return const TimerWidget();
+      case 4:
+        return Container();
+      default:
+        return Container();
+    }
+  }
 }
-
-
