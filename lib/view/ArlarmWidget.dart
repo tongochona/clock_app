@@ -10,6 +10,21 @@ class ArlarmWidget extends StatefulWidget {
 }
 
 class _ArlarmWidgetState extends State<ArlarmWidget> {
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  Future<void> _selectTime(BuildContext context, int index) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(), 
+    );
+    if (picked != null && picked != selectedTime) {
+      setState(() {
+        selectedTime = picked;
+        widget.arlarm.elementAt(index).time=selectedTime.format(context);
+      });
+
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,9 +32,8 @@ class _ArlarmWidgetState extends State<ArlarmWidget> {
       body: listArlarmWidget(widget.arlarm),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            widget.arlarm.add(Arlarm("8:30 PM", false));
-          });
+          _selectTime(context,widget.arlarm.length);
+          widget.arlarm.add(Arlarm(selectedTime.format(context), true));
         },
         shape: const CircleBorder(),
         foregroundColor: Colors.white,
@@ -50,13 +64,18 @@ class _ArlarmWidgetState extends State<ArlarmWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              MaterialButton(
+                child: Text(
                 arlarm.elementAt(index).time,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 40,
                 ),
               ),
+                onPressed: (){
+                  _selectTime(context, index);
+              }),
+              
               Switch(
                 value: arlarm.elementAt(index).isOn,
                 onChanged: (bool value) {
